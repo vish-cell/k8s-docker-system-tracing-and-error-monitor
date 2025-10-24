@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tarp-ui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tarp-ui
+  template:
+    metadata:
+      labels:
+        app: tarp-ui
+    spec:
+      containers:
+      - name: tarp-ui
+        image: c2-ui:latest
+        imagePullPolicy: Never
+        env:
+        - name: REACT_APP_MODEL_SERVICE_URL
+          value: "http://model-service:5001"
+        ports:
+        - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tarp-ui
+spec:
+  selector:
+    app: tarp-ui
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: ClusterIP

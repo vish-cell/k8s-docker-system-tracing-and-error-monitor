@@ -1,0 +1,11 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: deny-all-egress-from-default
+spec:
+  podSelector: {}
+  policyTypes:
+  - Egress
+  egress: []  # Deny all egress from pods in the default namespace
+# Note: This is a strict deny-all example. You can create more specific egress rules
+# to allow required services (DNS, internal services, etc.).

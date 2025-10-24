@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  auth-service:
+    build: ./auth-service
+    image: tarp_auth_service:latest
+    ports:
+      - "5000:5000"
+    restart: unless-stopped
+
+  model-service:
+    build: ./model-service
+    image: tarp_model_service:latest
+    ports:
+      - "5001:5001"
+    restart: unless-stopped
+
+  sensor-simulator:
+    build: ./sensor-simulator
+    image: tarp_sensor_simulator:latest
+    environment:
+      - MODEL_SERVICE_URL=http://model-service:5001/detect
+    depends_on:
+      - model-service
+    restart: unless-stopped
+
+  nginx-proxy:
+    build: ./nginx-proxy
+    image: tarp_nginx_proxy:latest
+    ports:
+      - "8080:80"
+    depends_on:
+      - auth-service
+      - model-service
+    restart: unless-stopped
+
+  tarp-ui:
+    build: ./ui
+    image: tarp_ui:latest
+    ports:
+      - "3000:80"
+    restart: unless-stopped

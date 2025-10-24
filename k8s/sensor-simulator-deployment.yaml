@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sensor-simulator
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sensor-simulator
+  template:
+    metadata:
+      labels:
+        app: sensor-simulator
+    spec:
+      containers:
+      - name: sensor-simulator
+        image: c2-simulator:latest
+        imagePullPolicy: Never
+        env:
+        - name: MODEL_SERVICE_URL
+          value: "http://model-service:5001/detect"
